@@ -197,8 +197,7 @@ export default function Home() {
             />
           </div>
           <code className="text-white">
-            {" "}
-            Values are averaged based on the difference in the last 2 minutes
+            Values are computed based on the difference in the last 2 minutes
           </code>
           <div className="flex items-center justify-center w-full md:w-auto text-center text-base font-medium px-6 py-3 bg-gradient-to-br from-yellow-300 to-yellow-600 text-secondary-900 rounded-md shadow-lg hover:shadow-xl hover:from-yellow-400 hover:to-yellow-700 transition">
             {bpm.toFixed(2)}
