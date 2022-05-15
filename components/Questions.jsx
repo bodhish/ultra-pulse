@@ -55,16 +55,16 @@ const Questions = ({ questions, questionNumber, updateAnswerCB }) => {
       <div className="mt-4">
         <button
           className="flex items-center justify-center w-full md:w-auto text-center text-base font-medium px-6 py-3 bg-gradient-to-br from-yellow-300 to-yellow-600 text-secondary-900 rounded-md shadow-lg hover:shadow-xl hover:from-yellow-400 hover:to-yellow-700 transition"
-          disabled={time < 6}
+          disabled={time < 4}
           onClick={() =>
             updateAnswer(setAnswerIndex, updateAnswerCB, answerIndex, setTime)
           }
         >
           {questions.length == questionNumber + 1
-            ? "Complete Quiz"
-            : "Next Question"}
+            ? "Complete Quiz "
+            : "Next Question "}
 
-          {time < 6 && <span> in {6 - time} seconds</span>}
+          {time < 4 && <span> in {4 - time} seconds</span>}
         </button>
       </div>
     </div>

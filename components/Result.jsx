@@ -3,10 +3,10 @@ import React from "react";
 const average = (arr) => arr.reduce((a, b) => a + b, 0) / arr.length;
 
 const message = (max) => {
-  if (max < 90) {
+  if (max < 100) {
     return "You heart rate is well in range, you seem pretty chill with the elon-twitter deal. 🥳";
   }
-  if (max < 100) {
+  if (max < 125) {
     return "You heart rate is a little high, damn, the elon-twitter deal seems to be worrying you. 😟";
   }
   return "You heart rate is high, you're taking elon-twitter deal a bit too seriously. 🤕";
