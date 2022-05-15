@@ -10,11 +10,34 @@ body {
     Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
 }
 
-a {
-  color: inherit;
-  text-decoration: none;
+.form-input-label {
+  @apply relative block text-secondary-100 tracking-wide text-base md:text-lg;
 }
-
-* {
-  box-sizing: border-box;
+.form-input-label::before {
+  @apply absolute bg-yellow-600 w-1 h-5 lg:h-7 z-10 -left-4 lg:-left-6 rounded-r-sm;
+  content: '';
+}
+.form-radio-wrapper {
+  @apply relative inline-flex flex-1 text-secondary-100 items-center text-sm lg:text-base;
+}
+.form-radio-wrapper:not(:first-child) {
+  @apply mr-2;
+}
+.form-radio-wrapper input[type="radio"]  {
+ @apply absolute left-2 bg-secondary-800 border-secondary-600 text-secondary-300 hover:text-secondary-400 focus:bg-secondary-800 focus:text-secondary-300 focus:border-secondary-400 focus:ring-1 focus:ring-offset-2 ring-offset-secondary-300 focus:ring-transparent;
+}
+.form-radio-wrapper > label {
+  @apply flex w-full items-center;
+}
+.form-radio-wrapper > label > label {
+  @apply flex w-full space-x-2 pr-2 pl-8 py-1.5 font-normal cursor-pointer text-secondary-100 rounded border border-secondary-700 bg-secondary-700 bg-opacity-30 hover:bg-secondary-900 hover:bg-opacity-60 hover:shadow-lg transition;
+}
+.form-radio-wrapper input[type="radio"]:checked + label {
+  @apply bg-secondary-500 bg-opacity-70 text-secondary-50 border-secondary-400 shadow-lg;
+}
+.form-radio-wrapper input[type="radio"]:checked {
+  @apply bg-indigo-700 border-secondary-400 ring-2 ring-secondary-300;
+}
+.form-radio-wrapper input[type="radio"]:focus + label {
+  @apply ring-1 ring-secondary-300;
 }

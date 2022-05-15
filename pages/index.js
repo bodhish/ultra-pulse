@@ -1,12 +1,20 @@
 import Head from "next/head";
 import React, { useState, useEffect, useRef } from "react";
+import Questions from "../components/Questions";
+import data from "/data/questions.json";
 
 export default function Home() {
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
   const graphCanvasRef = useRef(null);
   const [readings, setReadings] = useState([]);
-  const [bpm, setBpm] = useState(0);
+  const [state, setState] = useState({
+    questionNumber: -1,
+    page: "home",
+    answers: [],
+    ready: false,
+  });
+  const [bpm, setBpm] = useState({});
   let maxSamples = 60 * 5;
 
   useEffect(() => {
@@ -93,11 +101,18 @@ export default function Home() {
     const bpmValue = calculateBpm(dataStats.crossings);
 
     if (bpmValue) {
-      setBpm(Math.round(bpmValue));
+      let newBPM = bpm;
+      bpm[state.questionNumber]
+        ? newBPM[state.questionNumber].push(Math.round(bpmValue))
+        : (newBPM = { ...bpm, [state.questionNumber]: [Math.round(bpmValue)] });
+      setBpm(newBPM);
     }
-
-    drawGraph(dataStats, readings);
+    if (state.page == "quiz") {
+      drawGraph(dataStats, readings);
+    }
   };
+
+  const average = (arr) => arr.reduce((a, b) => a + b, 0) / arr.length;
 
   const analyzeData = (samples) => {
     // Get the mean average value of the samples
@@ -164,27 +179,8 @@ export default function Home() {
   const paintToCanvas = () => {
     setTimeout(async () => {
       console.log("Starting mainloop...");
-      monitorLoop();
+      // monitorLoop();
     }, 10);
-
-    // let video = videoRef.current;
-    // let photo = photoRef.current;
-    // let ctx = photo.getContext("2d");
-
-    // const width = 320;
-    // const height = 240;
-    // photo.width = width;
-    // photo.height = height;
-
-    // return setInterval(() => {
-    //   let color = colorRef.current;
-
-    //   ctx.drawImage(video, 0, 0, width, height);
-    //   let pixels = ctx.getImageData(0, 0, width, height);
-
-    //   color.style.backgroundColor = `rgb(${pixels.data[0]},${pixels.data[1]},${pixels.data[2]})`;
-    //   color.style.borderColor = `rgb(${pixels.data[0]},${pixels.data[1]},${pixels.data[2]})`;
-    // }, 200);
   };
 
   const drawGraph = (dataStats, readings) => {
@@ -198,11 +194,8 @@ export default function Home() {
     // Set offset based on number of samples, so the graph runs from the right edge to the left
     const xOffset = (maxSamples - readings.length) * xScaling;
 
-    console.log("readings.length", readings.length);
-    console.log("xScaling", xScaling);
-
     graphContext.lineWidth = "1.5";
-    graphContext.strokeStyle = "#f76";
+    graphContext.strokeStyle = "#fde047";
     graphContext.lineCap = "round";
     graphContext.lineJoin = "round";
 
@@ -234,6 +227,24 @@ export default function Home() {
     graphContext.stroke();
   };
 
+  let updateAnswer = (state, setState, answerIndex) => {
+    data.questions.length == state.questionNumber + 1
+      ? setState((previousState) => ({
+          ...previousState,
+          answers: state.answers.concat([answerIndex]),
+          page: "results",
+        }))
+      : setState((previousState) => ({
+          ...previousState,
+          answers: state.answers.concat([answerIndex]),
+          questionNumber: state.questionNumber + 1,
+        }));
+  };
+
+  let hiddenIf = (bool, classes) => {
+    return bool ? "hidden" : classes;
+  };
+
   return (
     <div className="flex flex-col min-h-screen bg-secondary-900 font-inter">
       <Head>
@@ -242,24 +253,87 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className="w-full md:max-w-screen-sm mx-auto mt-4 px-4">
+      <main className="w-full md:max-w-screen-sm mx-auto my-4 px-4">
         <div className="space-y-4 border border-secondary-700 shadow-lg bg-gradient-to-br from-secondary-800 to-secondary-900 p-4 lg:p-6 rounded-lg">
-          <h1 className="text-3xl font-bold text-white">Ultra Pulse!</h1>
-          <div className="flex items-center justify-center">
+          <div className="flex items-center">
+            <span className="relative inline-flex">
+              <button
+                className="inline-flex items-center transition ease-in-out duration-150"
+                disabled=""
+              >
+                <img src="/musk.png" className="h-10" />
+              </button>
+              <span className="flex absolute h-10 w-10 top-0 right-0 -mt-1 -mr-1">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-sky-400 opacity-75"></span>
+              </span>
+            </span>
+            <h1 className="text-3xl font-black text-white ml-2">
+              Ultra Pulse!
+            </h1>
+          </div>
+
+          <div className="flex items-center justify-center video-mask">
             <video
               onCanPlay={() => paintToCanvas()}
               ref={videoRef}
-              className="h-60 w-80"
+              className={hiddenIf(state.page !== "home", "h-60 w-80")}
               playsInline
               muted
             />
           </div>
-          <code className="text-white">
-            Values are computed based on the difference in the last 2 minutes
-          </code>
-          <div className="flex items-center justify-center w-full md:w-auto text-center text-base font-medium px-6 py-3 bg-gradient-to-br from-yellow-300 to-yellow-600 text-secondary-900 rounded-md shadow-lg hover:shadow-xl hover:from-yellow-400 hover:to-yellow-700 transition">
-            {bpm}
+          <div>
+            {state.page == "home" && (
+              <button
+                className="w-full flex items-center justify-center w-full md:w-auto text-center text-base font-medium px-6 py-3 bg-gradient-to-br from-yellow-300 to-yellow-600 text-secondary-900 rounded-md shadow-lg hover:shadow-xl hover:from-yellow-400 hover:to-yellow-700 transition"
+                onClick={() =>
+                  setState((previousState) => ({
+                    ...state,
+                    page: "quiz",
+                    questionNumber: 0,
+                  }))
+                }
+              >
+                Start Quiz
+              </button>
+            )}
           </div>
+          {state.page == "quiz" && (
+            <div>
+              <section id="graph-container w-full" className="w-full max-w-5xl">
+                <canvas
+                  className="w-full"
+                  ref={graphCanvasRef}
+                  height="100"
+                  id="graph-canvas"
+                ></canvas>
+              </section>
+              <Questions
+                questionNumber={state.questionNumber}
+                questions={data.questions}
+                updateAnswerCB={(answerIndex) =>
+                  updateAnswer(state, setState, answerIndex)
+                }
+              />
+            </div>
+          )}
+
+          {state.page == "results" && (
+            <div>
+              <h1 className="text-3xl font-black text-white ml-2">Results</h1>
+
+              <div className="space-y-4">
+                {Object.keys(bpm).map((key, index) => {
+                  return (
+                    <div key={index} className="text-white">
+                      <div> max: {Math.min(...bpm[key])}</div>
+                      <div> Min: {Math.max(...bpm[key])}</div>
+                      <div> Average: {average(bpm[key]).toFixed(2)}</div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
           <div className="hidden">
             <canvas
               id="sampling-canvas"
@@ -269,14 +343,6 @@ export default function Home() {
             ></canvas>
           </div>
         </div>
-        <section id="graph-container w-full" className="w-full max-w-5xl">
-          <canvas
-            className="w-full"
-            ref={graphCanvasRef}
-            height="100"
-            id="graph-canvas"
-          ></canvas>
-        </section>
       </main>
 
       <footer className="bg-secondary-800 w-full border-t border-secondary-700 mt-auto py-2 text-center">
@@ -288,6 +354,10 @@ export default function Home() {
         >
           Ultra Pulse
         </a>
+        {/* <div className="text-white">{bpm[questionNumber].}</div> */}
+        <code className="text-white text-xs">
+          {/* Values are computed based on the difference in the last 2 minutes */}
+        </code>
       </footer>
     </div>
   );
