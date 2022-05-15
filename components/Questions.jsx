@@ -1,11 +1,23 @@
-import React from "react";
-let updateAnswer = (setAnswerIndex, updateAnswerCB, answerIndex) => {
+import React, { useState, useEffect } from "react";
+let updateAnswer = (setAnswerIndex, updateAnswerCB, answerIndex, setTime) => {
   setAnswerIndex(null);
   updateAnswerCB(answerIndex);
+  setTime(0);
 };
 
 const Questions = ({ questions, questionNumber, updateAnswerCB }) => {
-  let [answerIndex, setAnswerIndex] = React.useState(null);
+  let [answerIndex, setAnswerIndex] = useState(null);
+  const [time, setTime] = useState(0);
+
+  useEffect(() => {
+    const id = setInterval(() => setTime((oldtime) => oldtime + 1), 1000);
+
+    return () => {
+      clearInterval(id);
+    };
+  }, []);
+
+  console.log(time);
 
   let question = questions[questionNumber];
   return (
@@ -43,13 +55,16 @@ const Questions = ({ questions, questionNumber, updateAnswerCB }) => {
       <div className="mt-4">
         <button
           className="flex items-center justify-center w-full md:w-auto text-center text-base font-medium px-6 py-3 bg-gradient-to-br from-yellow-300 to-yellow-600 text-secondary-900 rounded-md shadow-lg hover:shadow-xl hover:from-yellow-400 hover:to-yellow-700 transition"
+          disabled={time < 6}
           onClick={() =>
-            updateAnswer(setAnswerIndex, updateAnswerCB, answerIndex)
+            updateAnswer(setAnswerIndex, updateAnswerCB, answerIndex, setTime)
           }
         >
           {questions.length == questionNumber + 1
             ? "Complete Quiz"
             : "Next Question"}
+
+          {time < 6 && <span> in {6 - time} seconds</span>}
         </button>
       </div>
     </div>

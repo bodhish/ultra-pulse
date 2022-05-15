@@ -10,6 +10,20 @@ body {
     Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
 }
 
+button:disabled,
+.disabled {
+  @apply cursor-not-allowed bg-gray-300 text-gray-500 shadow-none border-transparent;
+  background-image: none;
+}
+
+button:disabled:hover,
+.disabled:hover,
+button:disabled:focus,
+.disabled:focus {
+  @apply bg-gray-300 text-gray-500 border-transparent shadow-none;
+  background-image: none;
+}
+
 .form-input-label {
   @apply relative block text-secondary-100 tracking-wide text-base md:text-lg;
 }

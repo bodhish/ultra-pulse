@@ -1,6 +1,7 @@
 import Head from "next/head";
 import React, { useState, useEffect, useRef } from "react";
 import Questions from "../components/Questions";
+import Result from "../components/Result";
 import data from "/data/questions.json";
 
 export default function Home() {
@@ -100,19 +101,17 @@ export default function Home() {
     const dataStats = analyzeData(readings);
     const bpmValue = calculateBpm(dataStats.crossings);
 
-    if (bpmValue) {
+    if (bpmValue && state.questionNumber !== -1) {
       let newBPM = bpm;
       bpm[state.questionNumber]
         ? newBPM[state.questionNumber].push(Math.round(bpmValue))
         : (newBPM = { ...bpm, [state.questionNumber]: [Math.round(bpmValue)] });
       setBpm(newBPM);
     }
-    if (state.page == "quiz") {
+    if (state.page != "results") {
       drawGraph(dataStats, readings);
     }
   };
-
-  const average = (arr) => arr.reduce((a, b) => a + b, 0) / arr.length;
 
   const analyzeData = (samples) => {
     // Get the mean average value of the samples
@@ -271,7 +270,16 @@ export default function Home() {
               Ultra Pulse!
             </h1>
           </div>
-
+          {state.page != "result" && (
+            <section id="graph-container w-full" className="w-full max-w-5xl">
+              <canvas
+                className="w-full"
+                ref={graphCanvasRef}
+                height="100"
+                id="graph-canvas"
+              ></canvas>
+            </section>
+          )}
           <div className="flex items-center justify-center video-mask">
             <video
               onCanPlay={() => paintToCanvas()}
@@ -283,30 +291,31 @@ export default function Home() {
           </div>
           <div>
             {state.page == "home" && (
-              <button
-                className="w-full flex items-center justify-center w-full md:w-auto text-center text-base font-medium px-6 py-3 bg-gradient-to-br from-yellow-300 to-yellow-600 text-secondary-900 rounded-md shadow-lg hover:shadow-xl hover:from-yellow-400 hover:to-yellow-700 transition"
-                onClick={() =>
-                  setState((previousState) => ({
-                    ...state,
-                    page: "quiz",
-                    questionNumber: 0,
-                  }))
-                }
-              >
-                Start Quiz
-              </button>
+              <div>
+                <code className="text-white text-xs my-4">
+                  Point the camera to a light source and make sure you see red
+                  color. You should not remove your hand from camera while
+                  taking the quiz, Ensure that values stabilize before taking
+                  the quiz.
+                </code>
+                <button
+                  className="mt-4 w-full flex items-center justify-center w-full md:w-auto text-center text-base font-medium px-6 py-3 bg-gradient-to-br from-yellow-300 to-yellow-600 text-secondary-900 rounded-md shadow-lg hover:shadow-xl hover:from-yellow-400 hover:to-yellow-700 transition"
+                  onClick={() =>
+                    setState((previousState) => ({
+                      ...state,
+                      page: "quiz",
+                      questionNumber: 0,
+                    }))
+                  }
+                >
+                  Start Quiz
+                </button>
+              </div>
             )}
           </div>
+
           {state.page == "quiz" && (
             <div>
-              <section id="graph-container w-full" className="w-full max-w-5xl">
-                <canvas
-                  className="w-full"
-                  ref={graphCanvasRef}
-                  height="100"
-                  id="graph-canvas"
-                ></canvas>
-              </section>
               <Questions
                 questionNumber={state.questionNumber}
                 questions={data.questions}
@@ -319,19 +328,7 @@ export default function Home() {
 
           {state.page == "results" && (
             <div>
-              <h1 className="text-3xl font-black text-white ml-2">Results</h1>
-
-              <div className="space-y-4">
-                {Object.keys(bpm).map((key, index) => {
-                  return (
-                    <div key={index} className="text-white">
-                      <div> max: {Math.min(...bpm[key])}</div>
-                      <div> Min: {Math.max(...bpm[key])}</div>
-                      <div> Average: {average(bpm[key]).toFixed(2)}</div>
-                    </div>
-                  );
-                })}
-              </div>
+              <Result bpm={bpm} />
             </div>
           )}
           <div className="hidden">
