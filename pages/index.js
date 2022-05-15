@@ -4,8 +4,10 @@ import React, { useState, useEffect, useRef } from "react";
 export default function Home() {
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
+  const graphCanvasRef = useRef(null);
   const [readings, setReadings] = useState([]);
   const [bpm, setBpm] = useState(0);
+  let maxSamples = 60 * 5;
 
   useEffect(() => {
     getVideo();
@@ -60,6 +62,13 @@ export default function Home() {
     // Scale to 0 ... 1
     return avg / 255;
   };
+
+  const handleResize = () => {
+    log("handleResize", GRAPH_CANVAS.clientWidth, GRAPH_CANVAS.clientHeight);
+    GRAPH_CANVAS.width = GRAPH_CANVAS.clientWidth;
+    GRAPH_CANVAS.height = GRAPH_CANVAS.clientHeight;
+  };
+
   const monitorLoop = () => {
     let samplingCanvas = canvasRef.current;
     let samplingContext = samplingCanvas.getContext("2d");
@@ -74,7 +83,7 @@ export default function Home() {
 
     const value = averageBrightness(samplingCanvas, samplingContext);
     const time = Date.now();
-    if (readings.length > 150) {
+    if (readings.length > maxSamples) {
       readings.shift();
     }
     readings.push({ value, time });
@@ -84,8 +93,10 @@ export default function Home() {
     const bpmValue = calculateBpm(dataStats.crossings);
 
     if (bpmValue) {
-      setBpm(bpmValue);
+      setBpm(Math.round(bpmValue));
     }
+
+    drawGraph(dataStats, readings);
   };
 
   const analyzeData = (samples) => {
@@ -176,6 +187,53 @@ export default function Home() {
     // }, 200);
   };
 
+  const drawGraph = (dataStats, readings) => {
+    let graphCanvas = graphCanvasRef.current;
+    let graphCanvasWidth = graphCanvas.clientWidth;
+    let graphContext = graphCanvas.getContext("2d");
+    // Scaling of sample window to the graph width
+
+    const xScaling = graphCanvasWidth / maxSamples;
+
+    // Set offset based on number of samples, so the graph runs from the right edge to the left
+    const xOffset = (maxSamples - readings.length) * xScaling;
+
+    console.log("readings.length", readings.length);
+    console.log("xScaling", xScaling);
+
+    graphContext.lineWidth = "1.5";
+    graphContext.strokeStyle = "#f76";
+    graphContext.lineCap = "round";
+    graphContext.lineJoin = "round";
+
+    graphContext.clearRect(0, 0, graphCanvasWidth, 100);
+    graphContext.beginPath();
+
+    // Avoid drawing too close to the graph edges due to the line thickness getting cut off
+    const maxHeight = 100;
+    let previousY = 0;
+    readings.forEach((sample, i) => {
+      const x = xScaling * i + xOffset;
+
+      let y = graphContext.lineWidth;
+
+      if (sample.value !== 0) {
+        y =
+          (maxHeight * (sample.value - dataStats.min)) /
+            (dataStats.max - dataStats.min) +
+          graphContext.lineWidth;
+      }
+
+      if (y != previousY) {
+        graphContext.lineTo(x, y);
+      }
+
+      previousY = y;
+    });
+
+    graphContext.stroke();
+  };
+
   return (
     <div className="flex flex-col min-h-screen bg-secondary-900 font-inter">
       <Head>
@@ -200,7 +258,7 @@ export default function Home() {
             Values are computed based on the difference in the last 2 minutes
           </code>
           <div className="flex items-center justify-center w-full md:w-auto text-center text-base font-medium px-6 py-3 bg-gradient-to-br from-yellow-300 to-yellow-600 text-secondary-900 rounded-md shadow-lg hover:shadow-xl hover:from-yellow-400 hover:to-yellow-700 transition">
-            {bpm.toFixed(2)}
+            {bpm}
           </div>
           <div className="hidden">
             <canvas
@@ -211,6 +269,14 @@ export default function Home() {
             ></canvas>
           </div>
         </div>
+        <section id="graph-container w-full" className="w-full max-w-5xl">
+          <canvas
+            className="w-full"
+            ref={graphCanvasRef}
+            height="100"
+            id="graph-canvas"
+          ></canvas>
+        </section>
       </main>
 
       <footer className="bg-secondary-800 w-full border-t border-secondary-700 mt-auto py-2 text-center">
