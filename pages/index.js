@@ -23,7 +23,7 @@ export default function Home() {
       .getUserMedia({
         video: {
           width: 300,
-          facingMode: ["user", "environment"],
+          facingMode: "environment",
           whiteBalanceMode: "manual",
           exposureMode: "manual",
           focusMode: "manual",
