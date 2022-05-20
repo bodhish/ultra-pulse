@@ -55,16 +55,18 @@ const Questions = ({ questions, questionNumber, updateAnswerCB }) => {
       <div className="mt-8">
         <button
           className="btn border-2 border-gray-800 bg-white hover:bg-gray-900 hover:text-white focus:text-white focus:bg-gray-900 button-xl w-full"
-          disabled={time < 4}
+          disabled={answerIndex == null || time < 4}
           onClick={() =>
             updateAnswer(setAnswerIndex, updateAnswerCB, answerIndex, setTime)
           }
         >
           {questions.length == questionNumber + 1
-            ? "Complete Quiz "
-            : "Next Question "}
+            ? "Complete Quiz"
+            : "Next Question"}
 
-          {time < 4 && <span> in {4 - time} seconds</span>}
+          {time < 4 && answerIndex && (
+            <span className="ml-1">in {4 - time} seconds</span>
+          )}
           <span className="ml-2">
             <svg
               className="w-5"
