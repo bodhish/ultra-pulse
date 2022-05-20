@@ -262,7 +262,7 @@ export default function Home() {
               <img src="/musk.png" className="h-10" />
             </button>
             <span className="flex absolute h-10 w-10 top-0 right-0 -mt-1 -mr-1">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-sky-400 opacity-75"></span>
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-200 opacity-75"></span>
             </span>
           </span>
           <h1 className="font-bold leading-tight break-words ml-4">
