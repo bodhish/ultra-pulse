@@ -295,12 +295,16 @@ export default function Home() {
                 <div className="mt-4">
                   {state.page == "home" && (
                     <div>
-                      <code className="text-gray-800 text-xs my-4">
-                        Point the camera to a light source and make sure you see
-                        red color. You should not remove your hand from camera
-                        while taking the quiz, Ensure that values stabilize
-                        before taking the quiz.
-                      </code>
+                      <h3 className="font-bold"> How to use Ultra Pulse?</h3>
+                      <p className="text-sm">
+                        Place your hand on the back camera and point it to a
+                        light source.
+                      </p>
+                      <img src="/intro.gif" className="mt-2 rounded-lg" />
+                      <p className="text-gray-800 text-xs my-4">
+                        Ensure that the graph above shows an ECG pattern and
+                        your hand is in the right position.
+                      </p>
                       <div className="w-full">
                         <button
                           className="btn w-full border-2 border-gray-800 bg-white hover:bg-gray-900 hover:text-white focus:text-white focus:bg-gray-900 button-xl mt-4 md:mt-5"
