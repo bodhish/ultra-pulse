@@ -17,13 +17,13 @@ const Result = ({ bpm }) => {
 
   return (
     <div>
-      <h1 className="text-3xl font-black text-white">Results</h1>
+      <h1 className="text-3xl font-black text-gray-800">Results</h1>
       <div className="my-4">
-        <div className="text-white mt-4 text-lg font-mono">
+        <div className="text-gray-800 mt-4 text-lg font-mono">
           <div>{message(Math.max(...possibleValues))}</div>
         </div>
       </div>
-      <div className="text-xs text-white">
+      <div className="text-xs text-gray-800">
         For Debug (Should be deleted before shipping)
         <div className="flex flex-wrap mt-2">
           {Object.keys(bpm).map((key, index) => {

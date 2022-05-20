@@ -17,44 +17,44 @@ const Questions = ({ questions, questionNumber, updateAnswerCB }) => {
     };
   }, []);
 
-  console.log(time);
+  let answerButtonClasses = (bool) => {
+    let c = bool
+      ? "bg-gray-900 hover:bg-gray-900 text-white focus:text-white focus:bg-gray-900"
+      : "bg-white hover:bg-gray-900 hover:text-white focus:text-white focus:bg-gray-900";
+    return `btn border-2 border-gray-900  button-xl mt-3 w-full ${c}`;
+  };
 
   let question = questions[questionNumber];
   return (
     <div>
-      <div className="flex flex-col space-y-4">
+      <div className="flex flex-col">
         <div>
-          <label
-            className="block form-input-label"
-            htmlFor="submission_proficient_in_local_languages"
-          >
+          <div className="inline-flex leading-tight text-sm text-orange-800 font-semibold bg-orange-200 py-1 px-1 rounded">
+            <p className="mr-1">{questionNumber + 1} of 4 -</p>
+            <p>Ultra Pulse</p>
+          </div>
+        </div>
+        <div>
+          <h1 className="font-bold pt-1 pb-2 leading-tight break-words">
             {question.title}
-          </label>
+          </h1>
         </div>
         {question.answers.map((answer, index) => {
           return (
-            <div key={index} className="form-radio-wrapper">
-              <label>
-                <input
-                  type="radio"
-                  name="answer"
-                  className="form-radio-wrapper"
-                  value={index}
-                  id={index}
-                  checked={answerIndex === index}
-                  onChange={(_) => setAnswerIndex(index)}
-                />
-                <label className="collection_radio_buttons" htmlFor={index}>
-                  {answer.title}
-                </label>
-              </label>
+            <div key={index}>
+              <div
+                className={answerButtonClasses(answerIndex === index)}
+                onClick={(_) => setAnswerIndex(index)}
+              >
+                {answer.title}
+              </div>
             </div>
           );
         })}
       </div>
-      <div className="mt-4">
+      <div className="mt-8">
         <button
-          className="flex items-center justify-center w-full md:w-auto text-center text-base font-medium px-6 py-3 bg-gradient-to-br from-yellow-300 to-yellow-600 text-secondary-900 rounded-md shadow-lg hover:shadow-xl hover:from-yellow-400 hover:to-yellow-700 transition"
+          className="btn border-2 border-gray-800 bg-white hover:bg-gray-900 hover:text-white focus:text-white focus:bg-gray-900 button-xl w-full"
           disabled={time < 4}
           onClick={() =>
             updateAnswer(setAnswerIndex, updateAnswerCB, answerIndex, setTime)
@@ -65,6 +65,18 @@ const Questions = ({ questions, questionNumber, updateAnswerCB }) => {
             : "Next Question "}
 
           {time < 4 && <span> in {4 - time} seconds</span>}
+          <span className="ml-2">
+            <svg
+              className="w-5"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+            >
+              <path
+                fill="currentColor"
+                d="M19.92 12.38a1 1 0 0 0 0-.76 1 1 0 0 0-.21-.33l-7-7a1 1 0 0 0-1.42 1.42l5.3 5.3H5a1 1 0 0 0 0 2h11.6l-5.3 5.3a1 1 0 1 0 1.42 1.42l7-7a1 1 0 0 0 .21-.33z"
+              />
+            </svg>
+          </span>
         </button>
       </div>
     </div>

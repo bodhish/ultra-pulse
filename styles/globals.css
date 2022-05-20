@@ -2,18 +2,121 @@
 @tailwind components;
 @tailwind utilities;
 
-html,
-body {
-  padding: 0;
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
-    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+html {
+  width: 100%;
+  height: 100%;
 }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Helvetica Neue", Arial, sans-serif;
+  color: #33312D;
+  @apply w-full antialiased bg-gray-100;
+}
+
+.main {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+@screen md {
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: theme(colors.gray.500) theme(colors.gray.100);
+  }
+  ::-webkit-scrollbar {
+    width: 12px;
+  }
+  ::-webkit-scrollbar-track {
+    background: theme(colors.gray.100);
+  }
+  ::-webkit-scrollbar-thumb {
+    background-color: theme(colors.gray.500);
+    border-radius: 6px;
+    border: 3px solid theme(colors.gray.100);
+  }
+}
+
+.home__container {
+  position: relative;
+}
+
+.home__container::before {
+  @apply bg-gray-800 absolute rounded-lg;
+  content: "";
+  bottom: -8px;
+  right: -8px;
+  z-index: -1;
+  width: 100%;
+  height: 100%;
+}
+
+h1 {
+  font-size: 1.75rem;
+}
+
+h2 {
+  font-size: 1.5rem;
+}
+
+h3 {
+  font-size: 1.25rem;
+}
+
+h4 {
+  font-size: 1rem;
+}
+
+h5 {
+  font-size: 0.75rem;
+}
+
+h6 {
+  font-size: 0.5rem;
+}
+
+@screen md {
+  h1 {
+    font-size: 2.5rem;
+  }
+  h2 {
+    font-size: 2rem;
+  }
+  h3 {
+    font-size: 1.5rem;
+  }
+  h4 {
+    font-size: 1.25rem;
+  }
+  h5 {
+    font-size: 1rem;
+  }
+  h6 {
+    font-size: 0.875rem;
+  }
+}
+
+
+@screen md {
+  .home__container::before {
+    bottom: -12px;
+    right: -12px;
+  }
+}
+
 
 button:disabled,
 .disabled {
   @apply cursor-not-allowed bg-gray-300 text-gray-500 shadow-none border-transparent;
   background-image: none;
+}
+
+.btn {
+  @apply inline-flex items-center justify-center text-sm font-semibold py-2 px-4 rounded-md cursor-pointer;
+}
+
+.btn:focus {
+  @apply outline-none shadow-inner;
 }
 
 button:disabled:hover,
@@ -24,34 +127,98 @@ button:disabled:focus,
   background-image: none;
 }
 
-.form-input-label {
-  @apply relative block text-secondary-100 tracking-wide text-base md:text-lg;
+
+/* Button */
+
+button:focus {
+  outline: none;
 }
-.form-input-label::before {
-  @apply absolute bg-yellow-600 w-1 h-5 lg:h-7 z-10 -left-4 lg:-left-6 rounded-r-sm;
-  content: '';
+
+.btn {
+  @apply inline-flex items-center justify-center text-sm font-semibold py-2 px-4 rounded-md cursor-pointer;
 }
-.form-radio-wrapper {
-  @apply relative inline-flex flex-1 text-secondary-100 items-center text-sm lg:text-base;
+
+.btn:focus {
+  @apply outline-none shadow-inner;
 }
-.form-radio-wrapper:not(:first-child) {
-  @apply mr-2;
+
+/* Button Styles */
+
+.btn-subtle {
+  @apply bg-gray-200 text-gray-800;
 }
-.form-radio-wrapper input[type="radio"]  {
- @apply absolute left-2 bg-secondary-800 border-secondary-600 text-secondary-300 hover:text-secondary-400 focus:bg-secondary-800 focus:text-secondary-300 focus:border-secondary-400 focus:ring-1 focus:ring-offset-2 ring-offset-secondary-300 focus:ring-transparent;
+
+.btn-subtle:hover {
+  @apply bg-gray-300 text-gray-900;
 }
-.form-radio-wrapper > label {
-  @apply flex w-full items-center;
+
+.btn-subtle:focus {
+  @apply bg-gray-400 text-gray-900;
 }
-.form-radio-wrapper > label > label {
-  @apply flex w-full space-x-2 pr-2 pl-8 py-1.5 font-normal cursor-pointer text-secondary-100 rounded border border-secondary-700 bg-secondary-700 bg-opacity-30 hover:bg-secondary-900 hover:bg-opacity-60 hover:shadow-lg transition;
+
+.btn-success {
+  @apply bg-green-500 text-white;
+  background-image: linear-gradient( 135deg, rgba(72, 187, 120, 1) 0%, rgba(56, 161, 105, 1) 100%);
 }
-.form-radio-wrapper input[type="radio"]:checked + label {
-  @apply bg-secondary-500 bg-opacity-70 text-secondary-50 border-secondary-400 shadow-lg;
+
+.btn-success:hover {
+  @apply bg-green-600;
+  background-image: linear-gradient( 135deg, rgba(56, 161, 105, 1) 0%, rgba(47, 133, 90, 1) 100%);
 }
-.form-radio-wrapper input[type="radio"]:checked {
-  @apply bg-indigo-700 border-secondary-400 ring-2 ring-secondary-300;
+
+.btn-success:focus {
+  @apply bg-green-800;
+  background-image: none;
 }
-.form-radio-wrapper input[type="radio"]:focus + label {
-  @apply ring-1 ring-secondary-300;
+
+.btn-warning {
+  @apply bg-yellow-500 text-white;
+  background-image: linear-gradient( 135deg, rgba(237, 137, 54, 1) 0%, rgba(221, 107, 32, 1) 100%);
+}
+
+.btn-warning:hover {
+  @apply bg-yellow-600;
+  background-image: linear-gradient( 135deg, rgba(221, 107, 32, 1) 0%, rgba(192, 86, 33, 1) 100%);
+}
+
+.btn-warning:focus {
+  @apply bg-yellow-800;
+  background-image: none;
+}
+
+.btn-danger {
+  @apply bg-red-500 text-white;
+  background-image: linear-gradient( 135deg, rgba(245, 101, 101, 1) 0%, rgba(229, 62, 62, 1) 100%);
+}
+
+.btn-danger:hover {
+  @apply bg-red-600;
+  background-image: linear-gradient( 135deg, rgba(229, 62, 62, 1) 0%, rgba(197, 48, 48, 1) 100%);
+}
+
+.btn-danger:focus {
+  @apply bg-red-800;
+  background-image: none;
+}
+
+button:disabled, .disabled {
+  @apply cursor-not-allowed bg-gray-300 text-gray-500 shadow-none border-transparent;
+  background-image: none;
+}
+
+button:disabled:hover, .disabled:hover, button:disabled:focus, .disabled:focus {
+  @apply bg-gray-300 text-gray-500 border-transparent shadow-none;
+  background-image: none;
+}
+
+.btn-normal {
+  @apply py-1 px-4 text-sm;
+}
+
+.btn-large {
+  @apply py-2 px-5 text-base;
+}
+
+.button-xl {
+  @apply py-2 px-5 text-base;
 }
