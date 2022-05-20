@@ -3,6 +3,9 @@ import React from "react";
 const average = (arr) => arr.reduce((a, b) => a + b, 0) / arr.length;
 
 const message = (max) => {
+  if (max > 140 || max < 65) {
+    return "It Looks like you haven't placed your finger correctly, Try again 🙃";
+  }
   if (max < 100) {
     return "You heart rate is well in range, you seem pretty chill with the elon-twitter deal. 🥳";
   }

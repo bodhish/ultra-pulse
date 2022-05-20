@@ -270,7 +270,7 @@ export default function Home() {
           </h1>
         </div>
         <div className="w-full md:mt-6 mt-4">
-          <div className="home__container flex flex-col justify-between h-auto md:h-full border-2 border-gray-800 rounded-lg bg-orange-50 px-4 py-6 md:px-6">
+          <div className="home__container flex flex-col justify-between h-auto md:h-full border-2 border-gray-800 rounded-lg bg-orange-50 py-6">
             {state.page != "result" && (
               <section id="graph-container w-full" className="w-full max-w-5xl">
                 <canvas
@@ -281,66 +281,70 @@ export default function Home() {
                 ></canvas>
               </section>
             )}
-            <div className="flex items-center justify-center video-mask mt-2">
-              <video
-                onCanPlay={() => paintToCanvas()}
-                ref={videoRef}
-                className={hiddenIf(state.page !== "home", "h-60 w-80")}
-                playsInline
-                muted
-              />
-            </div>
-            <div className="mt-4">
-              {state.page == "home" && (
-                <div>
-                  <code className="text-gray-800 text-xs my-4">
-                    Point the camera to a light source and make sure you see red
-                    color. You should not remove your hand from camera while
-                    taking the quiz, Ensure that values stabilize before taking
-                    the quiz.
-                  </code>
-                  <div className="w-full">
-                    <button
-                      className="btn w-full border-2 border-gray-800 bg-white hover:bg-gray-900 hover:text-white focus:text-white focus:bg-gray-900 button-xl mt-4 md:mt-5"
-                      onClick={() =>
-                        setState((previousState) => ({
-                          ...state,
-                          page: "quiz",
-                          questionNumber: 0,
-                        }))
-                      }
-                    >
-                      Start Quiz
-                    </button>
-                  </div>
+            <div className="px-4 md:px-6">
+              <div>
+                <div className="flex items-center justify-center video-mask mt-2">
+                  <video
+                    onCanPlay={() => paintToCanvas()}
+                    ref={videoRef}
+                    className={hiddenIf(state.page !== "home", "h-60 w-80")}
+                    playsInline
+                    muted
+                  />
                 </div>
-              )}
-            </div>
+                <div className="mt-4">
+                  {state.page == "home" && (
+                    <div>
+                      <code className="text-gray-800 text-xs my-4">
+                        Point the camera to a light source and make sure you see
+                        red color. You should not remove your hand from camera
+                        while taking the quiz, Ensure that values stabilize
+                        before taking the quiz.
+                      </code>
+                      <div className="w-full">
+                        <button
+                          className="btn w-full border-2 border-gray-800 bg-white hover:bg-gray-900 hover:text-white focus:text-white focus:bg-gray-900 button-xl mt-4 md:mt-5"
+                          onClick={() =>
+                            setState((previousState) => ({
+                              ...state,
+                              page: "quiz",
+                              questionNumber: 0,
+                            }))
+                          }
+                        >
+                          Start Quiz
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                </div>
 
-            {state.page == "quiz" && (
-              <div>
-                <Questions
-                  questionNumber={state.questionNumber}
-                  questions={data.questions}
-                  updateAnswerCB={(answerIndex) =>
-                    updateAnswer(state, setState, answerIndex)
-                  }
-                />
-              </div>
-            )}
+                {state.page == "quiz" && (
+                  <div>
+                    <Questions
+                      questionNumber={state.questionNumber}
+                      questions={data.questions}
+                      updateAnswerCB={(answerIndex) =>
+                        updateAnswer(state, setState, answerIndex)
+                      }
+                    />
+                  </div>
+                )}
 
-            {state.page == "results" && (
-              <div>
-                <Result bpm={bpm} />
+                {state.page == "results" && (
+                  <div>
+                    <Result bpm={bpm} />
+                  </div>
+                )}
+                <div className="hidden">
+                  <canvas
+                    id="sampling-canvas"
+                    ref={canvasRef}
+                    width="400"
+                    height="400"
+                  ></canvas>
+                </div>
               </div>
-            )}
-            <div className="hidden">
-              <canvas
-                id="sampling-canvas"
-                ref={canvasRef}
-                width="400"
-                height="400"
-              ></canvas>
             </div>
           </div>
         </div>
