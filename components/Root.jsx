@@ -260,7 +260,7 @@ export default function Root() {
           <div className="px-4 md:px-6">
             <div>
               <div className="flex items-center justify-center video-mask mt-2">
-                <div className="border rounded-lg overflow-hidden shadow ">
+                <div className="border rounded-lg overflow-hidden shadow aspect-auto">
                   <video
                     onCanPlay={() => paintToCanvas()}
                     ref={videoRef}
