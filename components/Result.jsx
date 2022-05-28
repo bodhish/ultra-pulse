@@ -3,7 +3,7 @@ import React from "react";
 const average = (arr) => arr.reduce((a, b) => a + b, 0) / arr.length;
 
 const message = (max) => {
-  if (max > 140 || max < 65) {
+  if (max > 145 || max < 65) {
     return "It Looks like you haven't placed your finger correctly, Try again 🙃";
   }
   if (max < 100) {
@@ -29,7 +29,10 @@ const Result = ({ bpm }) => {
         </div>
       </div>
       <div className="w-full px-4">
-        <a className="flex flex-col font-bold btn w-full border-2 border-gray-800 bg-white hover:bg-gray-900 hover:text-white focus:text-white focus:bg-gray-900 button-xl mt-4 md:mt-5">
+        <a
+          href="https://ultrahuman.com/"
+          className="flex flex-col font-bold btn w-full border-2 border-gray-800 bg-white hover:bg-gray-900 hover:text-white focus:text-white focus:bg-gray-900 button-xl mt-4 md:mt-5"
+        >
           <span>Get more health insights</span>
         </a>
       </div>
