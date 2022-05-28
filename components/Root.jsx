@@ -259,7 +259,7 @@ export default function Root() {
           )}
           <div className="px-4 md:px-6">
             <div>
-              <div className="flex items-center justify-center video-mask mt-2">
+              <div className="flex items-center justify-center video-mask mt-4">
                 <div className="border rounded-lg overflow-hidden shadow aspect-auto">
                   <video
                     onCanPlay={() => paintToCanvas()}
@@ -270,9 +270,9 @@ export default function Root() {
                   />
                 </div>
               </div>
-              <div className="mt-4">
+              <div>
                 {state.page == "home" && (
-                  <div>
+                  <div className="mt-4">
                     <p className="text-gray-800 text-xs text-center my-4">
                       Wait for the graph to stabilize
                     </p>
@@ -306,11 +306,6 @@ export default function Root() {
                 </div>
               )}
 
-              {state.page == "results" && (
-                <div>
-                  <Result bpm={bpm} />
-                </div>
-              )}
               <div className="hidden">
                 <canvas
                   id="sampling-canvas"
@@ -322,6 +317,11 @@ export default function Root() {
             </div>
           </div>
         </div>
+        {state.page == "results" && (
+          <div className="mt-10 home__container flex flex-col justify-between h-auto md:h-full border-2 border-gray-800 rounded-lg bg-orange-50 py-6">
+            <Result bpm={bpm} />
+          </div>
+        )}
       </div>
     </div>
   );

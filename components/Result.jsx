@@ -20,13 +20,20 @@ const Result = ({ bpm }) => {
 
   return (
     <div>
-      <h1 className="text-3xl font-black text-gray-800">Results</h1>
+      <h1 className="text-3xl font-semibold text-gray-800 text-center">
+        Your Hear Rate is {Math.round(average(possibleValues))}bpm
+      </h1>
       <div className="my-4">
-        <div className="text-gray-800 mt-4 text-lg font-mono">
+        <div className="text-gray-800 mt-6 text-lg text-center px-10">
           <div>{message(Math.max(...possibleValues))}</div>
         </div>
       </div>
-      <div className="text-xs text-gray-800">
+      <div className="w-full px-4">
+        <a className="flex flex-col font-bold btn w-full border-2 border-gray-800 bg-white hover:bg-gray-900 hover:text-white focus:text-white focus:bg-gray-900 button-xl mt-4 md:mt-5">
+          <span>Get more health insights</span>
+        </a>
+      </div>
+      <div className="text-xs text-gray-800 hidden">
         For Debug (Should be deleted before shipping)
         <div className="flex flex-wrap mt-2">
           {Object.keys(bpm).map((key, index) => {
